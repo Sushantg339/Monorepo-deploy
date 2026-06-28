@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    container_name: mono_db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: mono_backend
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_URL="postgresql://postgres:root@db:5432/postgres"
+    depends_on:
+      - db
+
+  ws:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.ws
+    container_name: mono_ws
+    ports:
+      - 8081:8081
+    environment:
+      - DATABASE_URL="postgresql://postgres:root@db:5432/postgres"
+    depends_on:
+      - db
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+      args:
+        - DB_URL="postgresql://postgres:root@db:5432/postgres"
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL="postgresql://postgres:root@db:5432/postgres"
+
+volumes:
+  db_data:
