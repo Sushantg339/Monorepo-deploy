@@ -23,3 +23,5 @@ jobs:
           file: ./docker/Dockerfile.backend
           push: true
           tags: sushantg339/mono-backend:${{ github.sha }}
+          build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
