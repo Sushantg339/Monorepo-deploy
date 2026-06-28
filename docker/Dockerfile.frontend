@@ -1,11 +1,13 @@
 FROM oven/bun:1
 
 ARG DB_URL
-ENV DATABASE_URL={DB_URL}
+ENV DATABASE_URL=${DB_URL}
 
 WORKDIR /usr/src/app
 
 COPY . .
+
+RUN bun install
 
 RUN bun run db:generate
 RUN DATABASE_URL=${DB_URL} bunx turbo build --filter=web...
