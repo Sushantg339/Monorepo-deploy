@@ -33,7 +33,7 @@ jobs:
           username: ubuntu 
           key: ${{ secrets.SSH_PRIVATE_KEY }} 
           script: | 
-            docker pull sushantg339/mono-backend:latest 
+            docker pull sushantg339/mono-backend:${{github.sha}} 
             docker stop mono_backend || true 
             docker rm mono_backend || true 
             docker run -d \ 
