@@ -26,7 +26,23 @@ jobs:
           build-args: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
       - name: Deploy to VM
+        - name: Deploy to VM
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
-          chmod 700 /home/runner/ssh_key
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@${{ secrets.VM_IP }} -t "docker kill mono_ws && docker rm mono_ws && docker run --name mono_backend -d -p 8080:8080 sushantg339/mono-ws:${{ github.sha }}"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@${{ secrets.VM_IP }} << 'EOF'
+          docker pull sushantg339/mono-backend:${{ github.sha }}
+
+          ```
+          docker stop mono_ws || true
+          docker rm mono_ws || true
+
+          docker run -d \
+            --name mono_backend \
+            -p 8080:8080 \
+            --restart unless-stopped \
+            sushantg339/mono-ws:${{ github.sha }}
+          ```
+
+          EOF
