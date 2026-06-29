@@ -30,7 +30,8 @@ jobs:
         uses: appleboy/ssh-action@v1.2.2 
         with: 
           host: ${{ secrets.VM_IP }} 
-          username: ubuntu key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          username: ubuntu 
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
           script: | 
             docker pull sushantg339/mono-backend:latest 
             docker stop mono_backend || true 
