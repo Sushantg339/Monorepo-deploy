@@ -39,6 +39,6 @@ jobs:
               --name mono_backend \ 
               --restart unless-stopped \ 
               -p 8080:8080 \ 
-              sushantg339/mono-backend:latest 
+              sushantg339/mono-backend:${{github.sha}} 
             
             docker image prune -f
