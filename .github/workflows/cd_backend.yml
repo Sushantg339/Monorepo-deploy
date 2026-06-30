@@ -34,8 +34,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }} 
           script: | 
             docker pull sushantg339/mono-backend:${{github.sha}} 
-            docker stop mono_backend || true 
-            docker rm mono_backend || true 
+            docker stop mono_backend
+            docker rm mono_backend
             docker run -d --name mono_backend --restart unless-stopped -d -p 8080:8080 sushantg339/mono-backend:${{github.sha}} 
             
             docker image prune -f
